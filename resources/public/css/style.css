@@ -1,0 +1,47 @@
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-size: 16px;
+    margin: 1.4rem;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+
+.fb-wrap {
+}
+
+.docs-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 400px;
+    
+}
+
+
+.occupy-grid {
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+    grid-gap: 1.5rem;
+}
+
+
+.guguta-img {
+    display: none;
+    position: absolute;
+    bottom: 1.4rem;
+    left: 1.4rem;
+    width: 15%;
+    max-width: 100px;
+}

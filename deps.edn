@@ -1,0 +1,7 @@
+{:paths ["src/cljs" "resources"]
+ :deps {org.clojure/clojure         {:mvn/version "1.10.0-alpha5"}
+        org.clojure/clojurescript   {:mvn/version "1.10.339"}
+        cljs-http   {:mvn/version "0.1.45"
+                     :exclusions   [org.clojure/core.async]}
+        roll        {:local/root "../roll"}}}
+
