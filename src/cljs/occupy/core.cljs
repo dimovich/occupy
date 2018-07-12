@@ -3,17 +3,23 @@
   (:require [taoensso.timbre :refer [info]]
             [cljs-http.client :as http]
             [dommy.core :as d]
+            [cemerick.url    :as url]
             [cljs.core.async :as async :refer [<! >! chan]]
             [occupy.links :refer [dashboard-url]]))
 
 
+
+;; todo: add hiccups
+
+
+(def internet (chan))
 
 
 (defn get-url [url]
   (info "getting" url)
   (let [c (chan)]
     (go
-      (let [{data :body} (<! (http/get url {:with-credentials? false}))]
+      (let [{data :body} (<! internet #_(http/get url {:with-credentials? false}))]
         (>! c data)))
     c))
 
@@ -36,16 +42,18 @@
 
 (defn fetch-articles [starting-url]
   (go
-    (let [article-urls (-> (<! (get-url starting-url))
-                           (clojure.string/split #"\r\n"))]
+    (let [article-urls (filter (partial re-find #"http.?://")
+                               (-> (<! (get-url starting-url))
+                                   (clojure.string/split #"\r\n")))]
 
       (info "article urls" article-urls)
 
       (let [article-chans (map get-url article-urls)]
-        (while true
-          (let [article (async/alts! article-chans)]
-            (info "got article" article)
-            (-> article append-article)))))))
+        (when-not (empty? article-urls)
+          (while true
+            (let [article (async/alts! article-chans)]
+              (info "got article" article)
+              (-> article append-article))))))))
 
 
 
