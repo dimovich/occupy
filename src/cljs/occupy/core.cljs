@@ -3,6 +3,7 @@
   (:require [taoensso.timbre :refer [info]]
             [cljs-http.client :as http]
             [dommy.core :as d]
+            [hipo.core :as hipo]
             [cemerick.url    :as url]
             [cljs.core.async :as async :refer [<! >! chan]]
             [occupy.links :refer [dashboard-url]]))
@@ -13,6 +14,21 @@
 
 
 (def internet (chan))
+
+
+(defn table-el [{columns :columns rows :rows :as args}]
+  (hipo/create
+   [:table
+    [:tbody
+     [:tr.table-header
+      (for [c columns]
+        [:td c])]
+     (for [r rows]
+       [:tr
+        (for [d r]
+          [:td d])])]]))
+
+
 
 
 (defn get-url [url]
@@ -26,17 +42,16 @@
 
 
 (defn coerce-article [data]
-  (-> data
-      (clojure.string/split #"\r\n")))
+  (map #(into [] (clojure.string/split % #"\t"))
+       (-> data
+           (clojure.string/split #"\r\n"))))
 
 
 
 (defn append-article [article]
-  (let [el (d/create-element :pre)]
-    (d/set-text! el article)
-    (-> (d/sel1 :#occupy-grid)
-        (d/append! el))))
-
+  (-> (d/sel1 :#occupy-grid)
+      (d/append! (table-el {:columns (first article)
+                            :rows (rest article)}))))
 
 
 
@@ -51,9 +66,9 @@
       (let [article-chans (map get-url article-urls)]
         (when-not (empty? article-urls)
           (while true
-            (let [article (async/alts! article-chans)]
+            (let [[article] (async/alts! article-chans)]
               (info "got article" article)
-              (-> article append-article))))))))
+              (-> article coerce-article append-article))))))))
 
 
 
