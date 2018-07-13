@@ -4,4 +4,4 @@
  :asset-path    "js/out"
  :optimizations :advanced
  :parallel-build true
- :source-map    "resources/js/occupy.js.map"}
+ :source-map    "resources/public/js/occupy.js.map"}
