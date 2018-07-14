@@ -10,7 +10,9 @@
 
 
 
-;; todo: add hiccups
+;; todo: add hiccups (test which is smaller)
+;; check how libraries affect the size of program
+;; move timbre's info behind an internal api
 
 
 (def internet (chan))
