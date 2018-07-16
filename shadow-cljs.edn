@@ -1,0 +1,7 @@
+{:deps true
+ :builds {:app {:target :browser
+                :output-to "resources/public/js/occupy.js"
+                :output-dir "resources/public/js"
+                :asset-path "js/out"
+                :pretty-print false
+                :modules {:main {:entries [occupy.core]}}}}}
